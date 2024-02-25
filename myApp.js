@@ -21,25 +21,35 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema);
 
 
-
 const createAndSavePerson = (done) => {
   const person = new Person({
     name: "John Doe",
     age: 30,
     favoriteFoods: ["Pizza", "Burgers"]
   });
+
   person.save((err, data) => {
-    if (err) {
-      return console.error(err);
-    }
+    if (err) { return console.error(err);}
     console.log("Person saved successfully:", data);
     done(null, data); 
   });
-
 };
 
+const arrayOfPeople= [
+  { name: "John", age: 30, favoriteFoods: ["Pizza", "Burgers"] },
+  { name: "Jane", age: 25, favoriteFoods: ["Sushi", "Tacos"] },
+  { name: "Bob", age: 40, favoriteFoods: ["Pasta", "Steak"] }
+];
 const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+   Person.create(arrayOfPeople, (err, data) => {
+    if (err) {
+      console.error(err);
+      done(err);
+    } else {
+      console.log("People saved successfully:", data);
+      done(null, data); 
+    }
+  });
 };
 
 const findPeopleByName = (personName, done) => {
