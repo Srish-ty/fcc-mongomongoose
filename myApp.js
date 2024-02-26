@@ -125,19 +125,45 @@ const findAndUpdate = (personName, done) => {
 };
 
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findOneAndRemove({_id:personId},(err, data) => {
+    if (err) {
+      console.error(err);
+      done(err);
+    } else {
+      console.log("person removed successfully using id:", data);
+      done(null, data); 
+    }
+  })
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-
-  done(null /*, data*/);
+  Person.remove({name:nameToRemove}, (err, data) => {
+    if (err) {
+      console.error(err);
+      done(err);
+    } else {
+      console.log("people removed successfully", data);
+      done(null, data); 
+    }
+  })
 };
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({ favoriteFoods: foodToSearch })
+  .sort({ name: 1 }) 
+  .limit(2) 
+  .select({ age: 0 }) 
+  .exec((err, data) => { 
+    if (err) {
+      console.error(err);
+      return done(err);
+    }
+    
+    console.log("People who like", foodToSearch + ":", data);
+    done(null, data);
+  });
 };
 
 /** **Well Done !!**
